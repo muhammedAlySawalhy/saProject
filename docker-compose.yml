@@ -1,0 +1,56 @@
+version: '3.7'
+
+volumes:
+  config:
+
+
+services:
+  
+  patient:
+  
+    build: ./PatientService 
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./config:/app/PatientService/config
+    environment:
+      - DB_HOST=127.0.0.1
+      - DB_PORT=5433
+      - DB_NAME=postgres
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=M1u2h3a4
+  gateway:
+    build: ./gateway
+    ports:
+      - "5000:5000"
+
+  kafka:
+    image: landoop/fast-data-dev:latest
+    ports:
+      - "2182:2182"
+      - "3031:3031"
+      - "8084-8087:8084-8087"
+      - "9595:9585"
+      - "9093:9093"
+
+  admin:
+    build: ./AdminService
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config:/app/AdminService/config
+    environment:
+      - DB_HOST=127.0.0.1
+      - DB_PORT=5433
+      - DB_NAME=postgres
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=M1u2h3a4
+      
+  db:
+    image: postgres
+    ports:
+      - "5433:5433"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=M1u2h3a4
