@@ -1,6 +1,5 @@
-
-import pool from "../controllers/dbController";
-import UserModel from "./UserModel";
+import pool from "../config/dbController.js";
+import UserModel from "../config/UserModel.js";
 class AdminModel extends UserModel {
   constructor(username, password, email) {
     super(username, password, email);
@@ -18,8 +17,6 @@ class AdminModel extends UserModel {
     }
   }
 
-
-  
   static async createPatient(username, password, email) {
     try {
       const query =

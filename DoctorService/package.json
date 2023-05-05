@@ -2,8 +2,8 @@
   "name": "doctorservice",
   "version": "1.0.0",
   "description": "",
-  "type":"module",
-   "main": "index.mjs",
+  "type": "module",
+  "main": "index.mjs",
   "scripts": {
     "start": "node index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,6 +15,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "kafka-node": "^5.0.0",
     "pg": "^8.10.0",
     "zod": "^3.21.4"
   }

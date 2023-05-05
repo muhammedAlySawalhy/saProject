@@ -1,5 +1,5 @@
 import { z } from "zod";
-import pool from "../controllers/dbController.js";
+import pool from "../config/dbController.js";
 
 export const MedicineSchema = z.object({
   medicine_id: z.number(),

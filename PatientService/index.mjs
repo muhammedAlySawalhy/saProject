@@ -3,7 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 const app = express();
 const port = process.env.PORT || 4000;
-import  patientRoutes  from "./views/patient.js";
+import patientRoutes from "./views/patient.js";
 app.use(cors());
 // Use body-parser to parse incoming JSON data
 app.use(bodyParser.json());

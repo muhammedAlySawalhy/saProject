@@ -31,7 +31,7 @@ services:
       - "3031:3031"
       - "8084-8087:8084-8087"
       - "9595:9585"
-      - "9093:9093"
+      - "9092:9092"
   db:
     image: postgres:15.1-alpine
     restart: always
@@ -50,6 +50,8 @@ services:
         - "3000:3000"
       volumes:
         - ./config:/app/AdminService/config
+      depends_on:
+        - doctor
 
 volumes:
   config:

@@ -1,4 +1,4 @@
-import kafka from "../config/kafka.js";
+import kafka from "kafka-node";
 import views from "../views/admin.js";
 const processPermissionRequest = async (message) => {
   const { doctorEmail, operationType, details } = JSON.parse(message.value);
@@ -42,15 +42,18 @@ const processPermissionRequest = async (message) => {
 };
 
 export const startListening = async () => {
-  await kafka.consumer.connect();
-  await kafka.consumer.subscribe({
-    topic: "permissions_requests",
-    fromBeginning: true,
-  });
+  const client = new kafka.KafkaClient({ kafkaHost: "kafka:9092" });
+  const consumer = new kafka.Consumer(client, [
+    { topic: "permissions_requests" },
+  ]);
 
-  await kafka.consumer.run({
-    eachMessage: async ({ message }) => {
-      await processPermissionRequest(message);
-    },
+  consumer.on("message", async (message) => {
+    await processPermissionRequest(message);
   });
+  consumer.on("error", (err) => {
+    console.error(err);
+  });
+  console.log(
+    "Kafka consumer is listening for messages on the 'permissions_requests' topic"
+  );
 };

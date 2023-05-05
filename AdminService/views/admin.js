@@ -1,12 +1,12 @@
 import express from "express";
 import Medicine from "../models/Medicine.mjs";
-import patientModel from "../models/patientModel";
+
 import adminModel from "../models/AdminModel.mjs";
 
 const router = express.Router();
 
 router.get("/medicines", async (req, res) => {
-  const result = await medicine.getAllmedicine();
+  const result = await Medicine.getAllmedicine();
   res.send(result);
 });
 
@@ -38,12 +38,12 @@ router.post("/add_category", async (req, res) => {
   const result = await adminModel.addCategory(name);
   res.send(result);
 });
-router.post("/delete_medicine", async (req, res) => {
-  const { name, patient } = req.body;
-  const p = new patientModel(patient);
-  const result = await p.deleteMedicine(name);
-  res.send(result);
-});
+// router.post("/delete_medicine", async (req, res) => {
+//   const { name, patient } = req.body;
+//   const p = new patientModel(patient);
+//   const result = await p.deleteMedicine(name);
+//   res.send(result);
+// });
 // router.post("/reply_help", async (req, res) => {
 //   const { patient, messages } = req.body;
 //   const p = new patientModel(patient);
