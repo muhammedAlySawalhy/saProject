@@ -1,0 +1,64 @@
+-- Create the schema for medicine
+CREATE TABLE medicine(
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  category_id UUID REFERENCES category(id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL
+);
+
+-- Create the schema for categories
+CREATE TABLE category(
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL
+);
+
+-- Create the schema for request
+CREATE TABLE request(
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  medicine_id UUID REFERENCES medicine(id) ON DELETE CASCADE,
+  patient_id UUID REFERENCES patient(id) ON DELETE CASCADE
+);
+
+-- Create the schema for user
+
+CREATE TABLE USERTABLE(
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  username TEXT NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'Patient',
+  is_admin BOOLEAN NOT NULL DEFAULT false
+);
+
+CREATE TABLE admin (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  user_id UUID NOT NULL UNIQUE,
+  FOREIGN KEY (user_id) REFERENCES "usertable" (id) ON DELETE CASCADE
+);
+
+CREATE TABLE patient (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  user_id UUID NOT NULL UNIQUE,
+  medicine TEXT[],
+  FOREIGN KEY (user_id) REFERENCES "usertable" (id) ON DELETE CASCADE
+);
+
+CREATE TABLE Doctor (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  department TEXT NOT NULL,
+  patient TEXT NOT NULL
+  FOREIGN KEY (patient) REFERENCES "patient" (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE reply (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  patient_name VARCHAR(255),
+  message TEXT,
+  FOREIGN KEY (patient_name) REFERENCES patient (name)
+);

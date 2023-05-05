@@ -4,16 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "cors": "^2.8.5",
-    "body-parser": "^1.19.0",
-    "http-proxy-middleware": "^2.0.6"
+    "express": "^4.18.2",
+    "http-proxy": "^1.18.1"
   }
 }

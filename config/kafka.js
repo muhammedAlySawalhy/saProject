@@ -1,5 +1,4 @@
-
-const kafka = require("kafka-node");
+import kafka from "kafka-node";
 
 class Kafka {
   constructor() {
@@ -7,7 +6,7 @@ class Kafka {
     this.producer = new kafka.Producer(this.client);
     this.consumer = new kafka.Consumer(
       this.client,
-      [{ topic: "help_requests" }],
+      [{ topic: "help_requests" }, { topic: "permissions_requests" }],
       { autoCommit: false }
     );
 
@@ -17,4 +16,4 @@ class Kafka {
   }
 }
 
-module.exports = new Kafka();
+export default new Kafka();

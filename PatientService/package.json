@@ -2,9 +2,10 @@
   "name": "patient",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.mjs",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,8 +13,9 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "esm": "^3.2.25",
     "express": "^4.17.1",
-    "pg": "^8.10.0"
+    "kafka-node": "^5.0.0",
+    "pg": "^8.10.0",
+    "zod": "^3.21.4"
   }
 }

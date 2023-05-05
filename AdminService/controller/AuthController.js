@@ -1,4 +1,4 @@
-import pool from "../config/dbController";
+import pool from "../config/dbController.js";
 
 const createUser = async (user) => {
   const { username, password } = user;
@@ -13,32 +13,6 @@ const createUser = async (user) => {
   } catch (err) {
     console.error(err.message);
     return { success: false, message: "Error creating user" };
-  }
-};
-const createPatient = async (patient) => {
-  const { name, email, userId } = patient;
-
-  // Validate the name field
-  if (!name) {
-    return { success: false, message: "Name is required" };
-  }
-  if (!userId) {
-    return { success: false, message: "user Id is required" };
-  }
-  const query = {
-    text: "INSERT INTO patient(name, email, user_id) VALUES($1, $2, $3)",
-    values: [name, email, userId],
-  };
-  try {
-    const result = await pool.query(query);
-    return {
-      success: true,
-      message: `Patient ${name} created with ID ${result.rows[0].id}`,
-      id: result.rows[0].id,
-    };
-  } catch (err) {
-    console.error(err.message);
-    return { success: false, message: "Error creating patient" };
   }
 };
 

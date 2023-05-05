@@ -1,19 +1,30 @@
-const express = require("express");
-
-import medicine from "../models/medicine";
+import express from "express";
+import Medicine from "../models/Medicine.mjs";
 import patientModel from "../models/patientModel";
-import adminModel from "../models/AdminModel";
+import adminModel from "../models/AdminModel.mjs";
 
 const router = express.Router();
 
-router.post("/medicines", async (req, res) => {
+router.get("/medicines", async (req, res) => {
   const result = await medicine.getAllmedicine();
   res.send(result);
 });
 
-router.post("/add_medicine", async (req, res) => {
-  const { medicine_name, category_id, quantity } = req.body;
+router.post("/create_patient", async (req, res) => {
+  const { name, email, password } = req.body;
 
+  const result = await adminModel.createPatient(name, email, password);
+  res.send(result);
+});
+router.post("/create_doctor", async (req, res) => {
+  const { name, email, deparment, patient } = req.body;
+
+  const result = await adminModel.createDoctor(name, email, deparment, patient);
+  res.send(result);
+});
+router.post("/create_medicine", async (req, res) => {
+  const { medicine_name, category_id, quantity } = req.body;
+  const medicine = new Medicine(medicine_name, category_id, quantity);
   const result = await medicine.create_medicine(
     medicine_name,
     category_id,
@@ -24,7 +35,7 @@ router.post("/add_medicine", async (req, res) => {
 router.post("/add_category", async (req, res) => {
   const { name } = req.body;
 
-  const result = await adminModel;
+  const result = await adminModel.addCategory(name);
   res.send(result);
 });
 router.post("/delete_medicine", async (req, res) => {
@@ -51,55 +62,15 @@ router.post("/search_medicine_by", async (req, res) => {
 });
 router.get("/medicines/:categoryName", async (req, res) => {
   try {
-    const { categoryName } = req.params;
+    const { medicine } = req.params;
+    const med = new Medicine(medicine);
+    const medBYCat = await med.getMedByCateg(caategory);
 
-    // Query the category ID from the category name
-    const categoryQuery = "SELECT id FROM category WHERE name = $1";
-    const categoryResult = await pool.query(categoryQuery, [categoryName]);
-
-    if (categoryResult.rows.length === 0) {
-      // Return an error if the category doesn't exist
-      return res.status(404).send("Category not found");
-    }
-
-    const categoryId = categoryResult.rows[0].id;
-
-    // Query all medicines that belong to the specified category ID
-    const medicineQuery =
-      "SELECT id, name, quantity FROM medicine WHERE category_id = $1";
-    const medicineResult = await pool.query(medicineQuery, [categoryId]);
-
-    res.status(200).json(medicineResult.rows);
+    res.status(200).json(medBYCat.rows);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
   }
 });
-router.get("/medicine/:name", async (req, res) => {
-  try {
-    const { name } = req.params;
 
-    // Use a SQL join query to get the category name of a medicine by name
-    const query = `
-      SELECT category.name
-      FROM medicine
-      INNER JOIN category
-      ON medicine.category_id = category.id
-      WHERE medicine.name = $1;
-    `;
-
-    const { rows } = await pool.query(query, [name]);
-
-    if (rows.length === 0) {
-      return res.status(404).send("Medicine not found");
-    }
-
-    const categoryName = rows[0].name;
-
-    res.json({ categoryName });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-});
-module.exports = router;
+export default router;

@@ -1,18 +1,20 @@
-# Use Node.js 14 as the base image
+# Use the official Node.js 14 image as the parent image
 FROM node:14
 
-# Set the working directory to /app
+# Set the working directory in the container to /app
 WORKDIR /app/gateway
 
-# Copy package.json and package-lock.json
+# Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Install dependencies
+# Install the dependencies
+RUN npm install
 
-RUN yarn install
-
-# Copy the rest of the application code
+# Copy the rest of the application's source code to the container
 COPY . .
 
-# Set the command to run when the container starts
-CMD ["yarn", "start"]
+# Expose port 5000 to the host machine
+EXPOSE 5000
+
+# Start the API Gateway application
+CMD [ "npm", "start" ]

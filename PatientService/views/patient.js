@@ -1,13 +1,7 @@
-const express = require("express");
+import express from "express";
 
-import medicine from "../models/medicine";
-import patientModel from "../models/patientModel";
+import patientModel from "../models/patientModel.mjs";
 const router = express.Router();
-
-router.post("/medicine", async (req, res) => {
-  const result = await medicine.getAllmedicine();
-  res.send(result);
-});
 
 router.post("/add_medicine", async (req, res) => {
   const { name, patient } = req.body;
@@ -29,8 +23,8 @@ router.post("/request_help", async (req, res) => {
 });
 router.post("/search_medicine", async (req, res) => {
   const { medicine_name } = req.body;
-  const result = await medicine.search_medicine(medicine_name);
+  const result = await patientModel.search_medicine(medicine_name);
   res.send(result);
 });
 
-module.exports = router;
+export default router;
