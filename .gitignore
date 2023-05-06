@@ -1,1 +1,5 @@
 node_modules
+AdminService/node_modules
+PatientService/node_modules
+DoctorService/node_modules
+gateway/node_modules
