@@ -1,5 +1,6 @@
 import kafka from "kafka-node";
-import views from "../views/admin.js";
+import AdminModel from "../models/AdminModel.mjs";
+import MedicineModel from "../models/Medicine.mjs";
 const processPermissionRequest = async (message) => {
   const { doctorEmail, operationType, details } = JSON.parse(message.value);
 
@@ -7,38 +8,43 @@ const processPermissionRequest = async (message) => {
   console.log(
     `Received permission request from doctor with email ${doctorEmail} for ${operationType} with details ${details}`
   );
+  switch (operationType) {
+    case "addPatient":
+      await AdminModel.createPatient(
+        details.username,
+        details.email,
+        details.password
+      );
+      break;
+    case "editPatient":
+      await AdminModel.editPatient(details.email, details.newPassword);
+      break;
+    case "deletePatient":
+      await AdminModel.deletePatient(details.email);
+      break;
+    case "searchPatientByName":
+      const result = await AdminModel.searchPatientByName(details.username);
+      console.log(result);
+      break;
+    
+    case "addCategory":
+      await AdminModel.addCategory(details.name);
+      break;
+    case "createMedicine":
+      await MedicineModel.create_medicine(
+        details.name,
+        details.category,
+        details.quantity
+      );
+      break;
+    case "deleteMedicine":
+      await MedicineModel.delete_medicine(details.name);
+      break;
 
-  if (confirmed) {
-    switch (operationType) {
-      case "addPatient":
-        await views.createPatient(
-          details.username,
-          details.password,
-          details.email
-        );
-        break;
-      case "editPatient":
-        await views.editPatient(details.email, details.newPassword);
-        break;
-      case "deletePatient":
-        await views.deletePatient(details.email);
-        break;
-      case "searchPatientByName":
-        await views.searchPatientByName(details.username);
-        break;
-      case "replyPatientByName":
-        await views.replyPatientByName(details.patientName, details.message);
-        break;
-      case "addCategory":
-        await views.addCategory(details.name);
-        break;
-      default:
-        console.log(`Invalid operation type: ${operationType}`);
-    }
-    console.log(`Permission granted to doctor with email ${doctorEmail}`);
-  } else {
-    console.log(`Permission denied to doctor with email ${doctorEmail}`);
+    default:
+      console.log(`Invalid operation type: ${operationType}`);
   }
+  console.log(`Permission granted to doctor with email ${doctorEmail}`);
 };
 
 export const startListening = async () => {

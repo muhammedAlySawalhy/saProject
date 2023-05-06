@@ -68,7 +68,7 @@ class Medicine {
       const query = "DELETE FROM medicine WHERE medicine_name = $1";
       const values = [medicine_name];
 
-      const { rows } = await pool.query(query);
+      const { rows } = await pool.query(query, values);
       return {
         success: true,
         data: rows[0],

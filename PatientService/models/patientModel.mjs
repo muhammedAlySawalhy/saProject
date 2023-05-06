@@ -5,13 +5,14 @@ const patientSchema = z.object({
   medicine: z.string().array(),
 });
 class Patient extends UserModel {
-  constructor(medicine = []) {
-    super();
+  constructor(medicine = [], name, email, password) {
+    super(email, password);
+    this.name = name;
     this.medicine = patientSchema.parse(medicine);
   }
   async searchMedicine(medicine_name) {
     try {
-      const reqMed = await pool.query(
+      await pool.query(
         "select medicine from Patient where medicine.name = $1  on Patient.id = Medicine.id ",
         [medicine_name]
       );

@@ -1,8 +1,9 @@
 import pool from "../config/dbController.js";
 import UserModel from "../config/UserModel.js";
+import { createUser } from "../controller/AuthController.js";
 class AdminModel extends UserModel {
   constructor(username, password, email) {
-    super(username, password, email);
+    super({ username, password, email });
   }
 
   static async createDoctor(name, email, department, patient) {
@@ -17,11 +18,18 @@ class AdminModel extends UserModel {
     }
   }
 
-  static async createPatient(username, password, email) {
+  static async createPatient(name, email, password) {
     try {
+      // Create user
+
+      const userResult = await createUser({ name, password });
+
+      const userId = userResult.rows[0].id;
+
+      // Create patient
       const query =
-        "INSERT INTO patient(username, password, email) VALUES($1, $2,$3)";
-      const values = [username, password, email];
+        "INSERT INTO patient(name, email, user_id) VALUES($1, $2, $3)";
+      const values = [name, email, userId];
 
       await pool.query(query, values);
     } catch (err) {
@@ -31,7 +39,8 @@ class AdminModel extends UserModel {
 
   static async editPatient(email, newPassword) {
     try {
-      const query = "UPDATE patient SET  password = $2 WHERE email = $3";
+      const query =
+        "UPDATE usertable SET password = $1 WHERE id = (SELECT user_id FROM patient WHERE email = $2)";
       const values = [newPassword, email];
 
       await pool.query(query, values);
@@ -53,12 +62,12 @@ class AdminModel extends UserModel {
 
   static async searchPatientByName(username) {
     try {
-      const query = "SELECT * FROM patient WHERE username ILIKE $1";
+      const query = "SELECT * FROM patient WHERE name ILIKE $1";
       const values = [`${username}%`];
 
       const result = await pool.query(query, values);
 
-      return result.rows;
+      return { "found with name": result.rows[0].name };
     } catch (err) {
       console.error(err);
     }

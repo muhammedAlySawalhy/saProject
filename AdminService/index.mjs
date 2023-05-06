@@ -4,7 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 const app = express();
 const port = process.env.PORT || 3000;
-import adminRoutes from "./views/admin.js";
+import adminRoutes from "./views/admin.mjs";
 app.use(cors());
 // Use body-parser to parse incoming JSON data
 app.use(bodyParser.json());

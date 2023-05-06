@@ -2,15 +2,15 @@ import UserModel from "../config/UserModel.js";
 import kafka from "kafka-node";
 
 class DoctorModel extends UserModel {
-  constructor(name, email, department, patients) {
-    super(name, email);
+  constructor(username, email, password, department, patients) {
+    super({ username, email, password });
     this.department = department;
     this.patients = patients;
   }
 
-  async requestPermission(operationType, details) {
+  requestPermission = (operationType, details, email) => {
     const message = {
-      doctorEmail: this.email,
+      doctorEmail: email,
       operationType,
       details,
     };
@@ -40,7 +40,7 @@ class DoctorModel extends UserModel {
     producer.on("error", (err) => {
       console.error(err);
     });
-  }
+  };
 }
 
 export default DoctorModel;

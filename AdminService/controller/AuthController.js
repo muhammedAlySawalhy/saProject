@@ -1,18 +1,17 @@
 import pool from "../config/dbController.js";
 
 const createUser = async (user) => {
-  const { username, password } = user;
-
+  const { name, password } = user;
+  console.log(user);
   const query = {
-    text: "INSERT INTO usertable(username,  password) VALUES($1, $2)",
-    values: [username, password],
+    text: "INSERT INTO usertable(username, password) VALUES($1, $2) RETURNING id",
+    values: [name, password],
   };
   try {
-    await pool.query(query);
-    return { success: true, message: `User ${username} created` };
+    const result = await pool.query(query);
+    return result;
   } catch (err) {
     console.error(err.message);
-    return { success: false, message: "Error creating user" };
   }
 };
 
@@ -64,10 +63,4 @@ const deleteUser = async (id) => {
   }
 };
 
-module.exports = {
-  createUser,
-  getUser,
-  updateUser,
-  deleteUser,
-  createPatient,
-};
+export { createUser, getUser, updateUser, deleteUser };

@@ -14,7 +14,9 @@ app.all("/admin/*", (req, res) => {
 app.all("/patient/*", (req, res) => {
   apiProxy.web(req, res, { target: "http://patient:4000" });
 });
-
+app.all("/doctor/*", (req, res) => {
+  apiProxy.web(req, res, { target: "http://doctor:6000" });
+});
 // Catch-all route for invalid requests
 app.all("/*", (req, res) => {
   res.status(404).send("Not found");

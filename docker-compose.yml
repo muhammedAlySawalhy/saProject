@@ -16,6 +16,10 @@ services:
       - "6000:6000"
     volumes:
       - ./config:/app/DoctorService/config
+    depends_on:
+        - kafka
+
+
 
   gateway:
     build: ./gateway
@@ -23,7 +27,8 @@ services:
       - "5000:5000"
     depends_on:
       - patient
-      - admin  
+      - admin 
+      - doctor 
   kafka:
     image: landoop/fast-data-dev:latest
     ports:
@@ -32,6 +37,7 @@ services:
       - "8084-8087:8084-8087"
       - "9595:9585"
       - "9092:9092"
+
   db:
     image: postgres:15.1-alpine
     restart: always
@@ -51,7 +57,9 @@ services:
       volumes:
         - ./config:/app/AdminService/config
       depends_on:
-        - doctor
+        - kafka
+
+          
 
 volumes:
   config:
